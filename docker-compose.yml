@@ -1,0 +1,56 @@
+version: '3'
+services:
+  odd-scheduler:
+    image: odd_scheduler
+    ports:
+      - 8085:8085
+    env_file:
+      - .env
+
+  odd-importer:
+    image: odd_importer
+    ports:
+      - 8091:8091
+    environment:
+      - PIVEAU_PIPE_ENDPOINT_PORT=8091
+      - PIVEAU_LOG_LEVEL=DEBUG
+      - PIVEAU_PIPE_LOG_LEVEL=DEBUG
+
+
+  odd-exporter-milano-foody:
+    image: odd_exporter
+    logging:
+      options:
+        max-size: "50m"
+    ports:
+      - 8088:8090
+    environment:
+      - PIVEAU_PIPE_ENDPOINT_PORT=8088
+      - PIVEAU_SUPERSET_CONFIG= #{postgresql-URI of the Apache Superset database into which export the respective data}
+      - PIVEAU_LOG_LEVEL=DEBUG
+      - PIVEAU_PIPE_LOG_LEVEL=DEBUG
+
+  odd-exporter-ams-swapshop:
+    image: odd_exporter
+    logging:
+      options:
+        max-size: "50m"
+    ports:
+      - 8089:8090
+    environment:
+      - PIVEAU_PIPE_ENDPOINT_PORT=8089
+      - PIVEAU_SUPERSET_CONFIG= #{postgresql-URI of the Apache Superset database into which export the respective data}
+      - PIVEAU_LOG_LEVEL=DEBUG
+      - PIVEAU_PIPE_LOG_LEVEL=DEBUG
+  
+  odd-transformer:
+    image: odd_transformer
+    ports:
+      - 8080:8080
+    environment:
+      - PIVEAU_LOG_LEVEL=DEBUG
+      - PIVEAU_PIPE_LOG_LEVEL=DEBUG
+
+
+  
+  
